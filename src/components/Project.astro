@@ -1,0 +1,67 @@
+---
+import Card from "@ui/Card/Card.astro";
+import CardHeader from "@ui/Card/CardHeader.astro";
+import CardContent from "@ui/Card/CardContent.astro";
+import CardFooter from "@ui/Card/CardFooter.astro";
+
+import Badge from "@ui/Badge.astro";
+import List from "./ui/List.astro";
+
+interface Props {
+    project: Project;
+}
+
+interface Project {
+    title: string;
+    url: Url;
+    badges: string[];
+    description: string;
+    missions: string[];
+    skills: string[];
+}
+
+interface Url {
+    name: string;
+    link: string;
+}
+
+const { title, url, badges, description, missions, skills } = Astro.props.project;
+---
+
+<Card variant={"bordered"} class="print:break-inside-avoid">
+    <CardHeader>
+        <div class="flex justify-between gap-x-2 text-base flex-col pb-1 sm:flex-row">
+            <h3 class="inline-flex gap-x-3 font-semibold leading-none items-center">
+                {title}
+                <span class="inline-flex gap-x-1 text-jetbrains">
+                    {badges?.map((badge) => (
+                        <Badge class="align-middle text-xs">
+                            {badge}
+                        </Badge>
+                    ))}
+                </span>
+            </h3>
+
+            <div class="tabular-nums text-gray-500 text-sm font-inter">
+                <a class="underline underline-offset-1" href={url.link} target="_blank" rel="noopener noreferrer">
+                    {url.name}
+                </a>
+            </div>
+        </div>
+    </CardHeader>
+
+    <CardContent class="font-inter mt-2 text-muted-foreground">
+        <div set:html={description}></div>
+        {missions && <List> {missions.map((mission) => (
+            <li>{mission}</li>
+        ))}</List>}
+    </CardContent>
+
+    <CardFooter class="inline-flex gap-1 text-jetbrains flex-wrap">
+        {skills?.map((skill) => (
+            <Badge variant="secondary" class="align-middle text-xs">
+                {skill}
+            </Badge>
+        ))}
+    </CardFooter>
+</Card>

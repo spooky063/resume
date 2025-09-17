@@ -1,0 +1,177 @@
+---
+import { RESUME_DATA } from "@/data/resume-data";
+
+import Layout from "@/layouts/ResumeLayout.astro";
+
+import Badge from "@ui/Badge.astro";
+import Button from "@ui/Button.astro";
+import Card from "@ui/Card/Card.astro";
+import CardHeader from "@ui/Card/CardHeader.astro";
+import CardContent from "@ui/Card/CardContent.astro";
+import Section from "@ui/Section.astro";
+
+import GlobeIcon from "@icons/GlobeIcon.astro";
+import MailIcon from "@icons/MailIcon.astro";
+import PhoneIcon from "@icons/PhoneIcon.astro";
+import Project from "@/components/Project.astro";
+---
+
+<Layout title="Dossier de compétences Guillaume Astier">
+  <main id="main" class="container relative mx-auto scroll-my-12 overflow-auto p-4 print:p-12 md:p-16">
+    <section class="mx-auto w-full max-w-3xl space-y-8 bg-white print:space-y-6 mb-12 print:break-after-page">
+      <div class="flex items-center justify-between">
+        <div class="flex-1 space-y-1.5 font-inter">
+          <h1 class="text-2xl font-bold">{RESUME_DATA.name}</h1>
+          <h2>{RESUME_DATA.title}</h2>
+          <p
+            class="max-w-md items-center text-pretty text-xs text-muted-foreground"
+          >
+            <GlobeIcon class="h-3 w-3 inline-block" />
+            {RESUME_DATA.location}
+          </p>
+
+          <div class="flex gap-x-1 pt-1 text-sm text-muted-foreground print:hidden">
+            {
+              RESUME_DATA.contact.social.map((contact) => {
+                return (
+                  <a href={contact.link}>
+                    <Button class="h-8 w-8 cursor-pointer" variant="outline" size="icon">
+                      <contact.icon class="h-4 w-4" />
+                    </Button>
+                  </a>
+                );
+              })
+            }
+
+            {
+              RESUME_DATA.contact.email ? (
+                <a href={`mailto:${RESUME_DATA.contact.email}`}>
+                  <Button class="h-8 w-8 cursor-pointer" variant="outline" size="icon">
+                    <MailIcon class="h-4 w-4" />
+                  </Button>
+                </a>
+              ) : null
+            }
+
+            {
+              RESUME_DATA.contact.phone ? (
+                <a href={`tel:${RESUME_DATA.contact.phone}`}>
+                  <Button class="h-8 w-8 cursor-pointer" variant="outline" size="icon">
+                    <PhoneIcon class="h-4 w-4" />
+                  </Button>
+                </a>
+              ) : null
+            }
+          </div>
+          <div class="hidden flex-col gap-x-1 font-mono text-sm text-muted-foreground print:flex">
+              {RESUME_DATA.contact.email ? (
+                <a href={`mailto:${RESUME_DATA.contact.email}`}>
+                  <span class="underline">{RESUME_DATA.contact.email}</span>
+                </a>
+              ) : null}
+            </div>
+        </div>
+      </div>
+
+      <Section>
+        {
+          RESUME_DATA.summary.title ? (
+            <h2 class="text-xl font-bold">{RESUME_DATA.summary.title}</h2>
+          ) : null
+        }
+        <p class="text-pretty text-muted-foreground">
+          {RESUME_DATA.summary.content}
+        </p>
+      </Section>
+
+      <Section>
+        <h2 class="text-xl font-bold font-inter">{RESUME_DATA.skills.title}</h2>
+        <div class="flex flex-wrap gap-1 font-jetbrains">
+          {
+            RESUME_DATA.skills.list.map((skill) => {
+              return <Badge title={skill} class="text-sm">{skill}</Badge>;
+            })
+          }
+        </div>
+      </Section>
+
+      <Section>
+        <h2 class="text-xl font-bold font-inter">{RESUME_DATA.work.title}</h2>
+        {
+          RESUME_DATA.work.list.map((work) => {
+            return (
+              <Card>
+                <CardHeader>
+                  <div class="flex items-center justify-between gap-x-2 text-base">
+                    <h3 class="inline-flex items-center justify-center gap-x-1 font-semibold leading-none">
+                      <a class="hover:underline font-inter" href={work.link}>
+                        {work.title}
+                      </a>
+
+                      <span class="inline-flex gap-x-1 text-jetbrains">
+                        {work.badges.map((badge) => (
+                          <Badge
+                            variant="secondary"
+                            class="align-middle text-xs"
+                          >
+                            {badge}
+                          </Badge>
+                        ))}
+                      </span>
+                    </h3>
+                    <div class="tabular-nums text-gray-500 text-sm font-inter">
+                      {work.start} - {work.end}
+                    </div>
+                  </div>
+
+                  <h4 class="leading-none">
+                    {work.position}
+                  </h4>
+                </CardHeader>
+                <CardContent class="mt-2 text-muted-foreground">
+                  {work.description}
+                </CardContent>
+              </Card>
+            );
+          })
+        }
+      </Section>
+
+      <Section>
+        <h2 class="text-xl font-bold font-inter">{RESUME_DATA.education.title}</h2>
+        {
+          RESUME_DATA.education.list.map((education) => {
+            return (
+              <Card>
+                <CardHeader class="font-inter">
+                  <div class="flex items-center justify-between gap-x-2 text-base">
+                    <h3 class="font-semibold leading-none">
+                      {education.school}
+                    </h3>
+                    <div class="tabular-nums text-gray-500 text-sm">
+                      {education.start} - {education.end}
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent class="mt-2">{education.degree}</CardContent>
+              </Card>
+            );
+          })
+        }
+      </Section>
+    </section>
+
+    <section class="mx-auto w-full max-w-3xl space-y-8 bg-white print:space-y-6">
+      <Section>
+        <h2 class="text-xl font-bold font-inter">{RESUME_DATA.project.title}</h2>
+        {
+          RESUME_DATA.project.list.map((project) => {
+            return (
+              <Project project={project} />
+            );
+          })
+        }
+      </Section>
+    </section>
+  </main>
+</Layout>
